@@ -8,6 +8,8 @@ target 'BASE' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNI18n', :path => '../node_modules/react-native-i18n'
+
   target 'BASETests' do
     inherit! :complete
     # Pods for testing
