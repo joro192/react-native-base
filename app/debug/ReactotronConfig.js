@@ -1,8 +1,27 @@
-import Reactotron from 'reactotron-react-native'
+import Reactotron from 'reactotron-react-native';
+import {reactotronRedux} from 'reactotron-redux';
+import sagaPlugin from 'reactotron-redux-saga';
+import {NativeModules} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
-Reactotron
-  .setAsyncStorageHandler(AsyncStorage) // AsyncStorage would either come from `react-native` or `@react-native-community/async-storage` depending on where you get it from
-  .configure() // controls connection & communication settings
-  .useReactNative() // add all built-in react native plugins
-  .connect() // let's connect!
+let scriptHostname = 'localhost';
+if (__DEV__) {
+  const scriptURL = NativeModules.SourceCode.scriptURL;
+  scriptHostname = scriptURL.split('://')[1].split(':')[0];
+}
+
+const reactotron = Reactotron.setAsyncStorageHandler(AsyncStorage)
+  .configure({host: scriptHostname})
+  // .configure("RN Base")
+  .use(reactotronRedux())
+  // .setAsyncStorageHandler(AsyncStorage)
+  .useReactNative({
+    networking: {
+      ignoreUrls: /symbolicate/,
+    },
+  })
+  .use(sagaPlugin())
+  .connect();
+
+console.tron = Reactotron;
+export default reactotron;

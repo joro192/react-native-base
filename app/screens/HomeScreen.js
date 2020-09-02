@@ -1,14 +1,46 @@
-// In App.js in a new project
+import React, {Component} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {connect} from 'react-redux';
+import * as actions from '@action';
 
-import * as React from 'react';
-import { View, Text } from 'react-native';
+import R from '@R';
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-    </View>
-  );
+class HomeScreen extends Component {
+  setLanguage = (language) => {
+    this.setState({language});
+    this.props.setLanguage(language);
+  };
+
+  render() {
+    const {language} = this.props;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <TouchableOpacity
+          onPress={() => this.setLanguage(language == 'en' ? 'vi' : 'en')}>
+          <Text>{R.strings.home}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
-export default HomeScreen;
+const mapStateToProps = (state) => {
+  return {
+    language: state.languageReducer.language,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setLanguage: (language) => {
+      dispatch(actions.changeLanguage(language));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
