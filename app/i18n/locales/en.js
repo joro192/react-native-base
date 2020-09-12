@@ -5,4 +5,7 @@ export default {
   account: 'Account',
   update_user_info: "Update user's information",
   test: 'Test',
+  name: 'Username',
+  password: 'Password',
+  repassword: 'Type password again'
 };
